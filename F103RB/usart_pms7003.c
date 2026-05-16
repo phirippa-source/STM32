@@ -57,8 +57,7 @@ uint16_t GetWord(uint8_t *buf, uint8_t index);
 uint8_t PMS7003_Read(uint8_t *buf);
 
 
-int main(void)
-{
+int main(void) {
     /*
         PMS7003 sends one data frame of 32 bytes.
 
@@ -86,8 +85,7 @@ int main(void)
     */
     USART2_SendString("PMS7003 start\r\n");
 
-    while (1)
-    {
+    while (1) {
         /*
             Try to read one valid PMS7003 frame.
 
@@ -95,8 +93,7 @@ int main(void)
             - 1 if a valid frame is received
             - 0 if the frame is invalid
         */
-        if (PMS7003_Read(buf))
-        {
+        if (PMS7003_Read(buf)) {
             /*
                 Extract PM values from the received frame.
 
@@ -134,8 +131,7 @@ int main(void)
 }
 
 
-void USART1_Init(void)
-{
+void USART1_Init(void) {
     /*
         USART1 is used to receive data from the PMS7003 sensor.
 
@@ -201,8 +197,7 @@ void USART1_Init(void)
 }
 
 
-void USART2_Init(void)
-{
+void USART2_Init(void) {
     /*
         USART2 is used to send data to the PC.
 
@@ -266,8 +261,7 @@ void USART2_Init(void)
 }
 
 
-uint8_t USART1_ReadByte(void)
-{
+uint8_t USART1_ReadByte(void) {
     /*
         Wait until received data is available.
 
@@ -286,8 +280,7 @@ uint8_t USART1_ReadByte(void)
 }
 
 
-void USART2_SendChar(char c)
-{
+void USART2_SendChar(char c) {
     /*
         Wait until transmit data register is empty.
 
@@ -307,8 +300,7 @@ void USART2_SendChar(char c)
 }
 
 
-void USART2_SendString(char *s)
-{
+void USART2_SendString(char *s) {
     /*
         Send characters one by one until the null character is found.
 
@@ -321,8 +313,7 @@ void USART2_SendString(char *s)
 }
 
 
-void USART2_SendNumber(uint16_t num)
-{
+void USART2_SendNumber(uint16_t num) {
     /*
         Convert an unsigned integer value to decimal characters
         and send them through USART2.
@@ -368,15 +359,13 @@ void USART2_SendNumber(uint16_t num)
 
         This restores the correct decimal number order.
     */
-    while (i > 0)
-    {
+    while (i > 0) {
         USART2_SendChar(buf[--i]);
     }
 }
 
 
-uint16_t GetWord(uint8_t *buf, uint8_t index)
-{
+uint16_t GetWord(uint8_t *buf, uint8_t index) {
     /*
         PMS7003 stores 16-bit values in big-endian format.
 
@@ -394,8 +383,7 @@ uint16_t GetWord(uint8_t *buf, uint8_t index)
 }
 
 
-uint8_t PMS7003_Read(uint8_t *buf)
-{
+uint8_t PMS7003_Read(uint8_t *buf) {
     uint8_t i;
     uint16_t sum = 0;
     uint16_t checksum;
@@ -432,8 +420,7 @@ uint8_t PMS7003_Read(uint8_t *buf)
         PMS7003 frame size is 32 bytes,
         so we read buf[2] through buf[31].
     */
-    for (i = 2; i < 32; i++)
-    {
+    for (i = 2; i < 32; i++) {
         buf[i] = USART1_ReadByte();
     }
 
@@ -455,8 +442,7 @@ uint8_t PMS7003_Read(uint8_t *buf)
         PMS7003 checksum is the sum of bytes from buf[0] to buf[29].
         The result is compared with the received checksum.
     */
-    for (i = 0; i < 30; i++)
-    {
+    for (i = 0; i < 30; i++) {
         sum += buf[i];
     }
 
